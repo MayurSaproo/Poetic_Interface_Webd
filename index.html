@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gift of Words</title>
+    <!-- Google Fonts for elegant typography -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-color: #fdfaf6;
+            --accent-soft: #e8dff5;
+            --accent-warm: #fce1e4;
+            --accent-mint: #daeaf6;
+            --text-main: #4a4a4a;
+            --text-muted: #8e8e8e;
+            --card-bg: rgba(255, 255, 255, 0.75);
+            --sidebar-width: 240px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--bg-color), var(--accent-soft), var(--accent-mint));
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Layout Container */
+        .app-layout {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Sidebar Styling */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-right: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 2.5rem 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            position: fixed;
+            height: 100vh;
+            z-index: 100;
+            transition: all 0.5s ease;
+        }
+
+        .sidebar-brand {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            color: #333;
+        }
+
+        .nav-item {
+            padding: 0.8rem 1.2rem;
+            border-radius: 12px;
+            cursor: pointer;
+            color: var(--text-muted);
+            font-weight: 500;
+            transition: all 0.3s ease;
+            text-align: left;
+            border: none;
+            background: transparent;
+            font-size: 0.9rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.5);
+            color: var(--text-main);
+            transform: translateX(5px);
+        }
+
+        .nav-item.active {
+            background: white;
+            color: var(--text-main);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+
+        .nav-footer {
+            margin-top: auto;
+            border-top: 1px solid rgba(0,0,0,0.05);
+            padding-top: 1rem;
+        }
+
+        /* Main Content Area */
+        .main-content {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            transition: all 0.5s ease;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        .main-content.sidebar-active {
+            margin-left: var(--sidebar-width);
+            align-items: flex-start;
+            padding: 4rem 2rem;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 600px;
+            position: relative;
+        }
+
+        /* Views */
+        .view {
+            display: none;
+            width: 100%;
+            text-align: center;
+        }
+
+        .view.active {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Landing Page Specific */
+        .landing-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .landing-content h2 {
+            font-family: 'Playfair Display', serif;
+            font-style: italic;
+            font-size: clamp(2rem, 8vw, 3rem);
+            color: #333;
+            margin-bottom: 1.5rem;
+            line-height: 1.3;
+        }
+
+        /* Poetry Feed */
+        .poetry-feed {
+            display: flex;
+            flex-direction: column;
+            gap: 2.5rem;
+            width: 100%;
+        }
+
+        /* Poetry Card Styling */
+        .poetry-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 2rem;
+            padding: clamp(2rem, 6vw, 3rem);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.03);
+            width: 100%;
+            text-align: center;
+        }
+
+        .type-badge {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.2rem;
+            color: var(--text-muted);
+            margin-bottom: 0.8rem;
+            display: block;
+        }
+
+        h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.4rem, 5vw, 1.8rem);
+            margin-bottom: 1.2rem;
+            color: #333;
+        }
+
+        .poem-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.1rem, 4vw, 1.25rem);
+            line-height: 1.8;
+            font-style: italic;
+            color: #555;
+            white-space: pre-line;
+        }
+
+        .divider {
+            width: 30px; 
+            height: 2px; 
+            background: var(--accent-warm); 
+            margin: 0 auto 1.2rem;
+            opacity: 0.6;
+        }
+
+        /* Mobile Nav */
+        @media (max-width: 850px) {
+            .sidebar {
+                width: 100%;
+                height: auto;
+                bottom: 0;
+                top: auto;
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: center;
+                padding: 0.6rem;
+                border-right: none;
+                border-top: 1px solid rgba(255, 255, 255, 0.5);
+                border-radius: 20px 20px 0 0;
+            }
+
+            .sidebar-brand { display: none; }
+            .nav-footer { margin-top: 0; border-top: none; padding-top: 0; width: 100%; display: flex; justify-content: center;}
+
+            .nav-item {
+                padding: 0.6rem;
+                font-size: 0.65rem;
+                flex: 1 1 auto;
+                text-align: center;
+                border-radius: 10px;
+            }
+
+            .main-content.sidebar-active {
+                margin-left: 0;
+                padding-top: 2rem;
+                padding-bottom: 160px;
+            }
+        }
+
+        .cta-btn {
+            background: white;
+            border: 1px solid rgba(0,0,0,0.05);
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+            color: #555;
+        }
+
+        .cta-btn:hover {
+            background: var(--accent-warm);
+            color: white;
+            transform: translateY(-3px);
+        }
+
+        .home-btn {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            background: rgba(255, 255, 255, 0.4);
+            border: 1px solid rgba(0,0,0,0.03);
+            padding: 0.6rem 1rem;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s ease;
+        }
+
+        .home-btn:hover {
+            background: var(--accent-warm);
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-layout">
+        <!-- Sidebar Navigation -->
+        <nav id="appSidebar" class="sidebar" style="display: none;">
+            <div class="sidebar-brand">Categories</div>
+            <button id="haikuNavItem" class="nav-item active" onclick="switchPoem('haiku', this)">Haiku</button>
+            <button class="nav-item" onclick="switchPoem('sonnet', this)">Sonnet</button>
+            <button class="nav-item" onclick="switchPoem('limerick', this)">Limerick</button>
+            <button class="nav-item" onclick="switchPoem('ballad', this)">Ballad</button>
+            <button class="nav-item" onclick="switchPoem('freeverse', this)">Free Verse</button>
+            
+            <div class="nav-footer">
+                <button class="home-btn" onclick="returnHome()">← Return Home</button>
+            </div>
+        </nav>
+
+        <main id="mainContent" class="main-content">
+            <div class="container">
+                <!-- Landing View -->
+                <div id="landingView" class="view active">
+                    <div class="landing-content">
+                        <h2>Sometimes, the most profound things are said in silence.</h2>
+                        <p style="color: var(--text-muted); margin-bottom: 2.5rem; letter-spacing: 0.5px;">A special collection of words, waiting for you.</p>
+                        <button class="cta-btn" onclick="startExperience()">Open the Collection</button>
+                    </div>
+                </div>
+
+                <!-- Poetry View -->
+                <div id="poetryView" class="view">
+                    <div id="poetryFeed" class="poetry-feed">
+                        <!-- Content injected via JS -->
+                    </div>
+                    <!-- Updated dedication -->
+                    <p style="margin-top: 3rem; font-size: 0.9rem; font-family: 'Playfair Display', serif; font-style: italic; color: var(--text-muted);">
+                        — Dedicated to a dear Vaani
+                    </p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const poetryData = {
+            haiku: [
+                { title: "The Shore", text: "Silver moonlight falls\nWaves embrace the quiet sand\nNight begins to breathe" },
+                { title: "The Pond", text: "Stagnant water stills\nFrog leaps through the liquid glass\nSilence ripples out" }
+            ],
+            sonnet: [
+                { title: "A Friend's Reflection", text: "Shall I compare thy calm to winter's peace,\nWhere quiet snowfall hides the world from view?\nIn every word thy gentle thoughts release,\nA steady light that shines forever true.\nThe summer's heat may burn the weary grass,\nAnd autumn's wind may strip the maple bare;\nBut moments in thy presence as they pass,\nRemain as sweet as spring’s first morning air.\nThou art the anchor in the rising tide,\nA port of call when stormy skies are gray;\nWith kindness as thy compass and thy guide,\nThou lead'st the heart toward a brighter day.\nSo long as breath remains and eyes can see,\nThis verse shall live and tell the world of thee." }
+            ],
+            limerick: [
+                { title: "The Scholar", text: "There once was a student of art,\nWho knew all the poems by heart.\nHe’d quote them in bed,\nWith a book on his head,\nAND claim he was brilliantly smart!" },
+                { title: "The Cat in the Tree", text: "A fluffy white cat in a tree,\nWas happy as happy could be.\nBut a bird gave a squawk,\nAnd the cat started a talk,\nThen fell in a cup of cold tea!" }
+            ],
+            ballad: [
+                { title: "The Wanderer", text: "Across the moors where heather grows,\nBeneath the silver moon,\nA traveller walked where no one goes,\nAnd sang a lonely tune.\n\n'Oh stay thy hand,' the north wind cried,\n'The night is cold and deep.'\nBut with a dream as faithful guide,\nHe had a vow to keep.\n\nHe sought the star that never sets,\nAcross the trackless sea,\nTo leave behind all old regrets,\nAnd finally be free." }
+            ],
+            freeverse: [
+                { title: "Unbound", text: "You are not a single note,\nbut a symphony.\nNot a drop of rain,\nbut the whole storm that feeds the earth.\nYou move like light on water—\nunpredictable, brilliant,\nand entirely yourself." },
+                { title: "Morning Light", text: "The sun does not apologize\nfor being bright.\nIt simply is.\nLike the way you exist in the world,\nfilling the cracks in the day\nwith something steady and warm." }
+            ]
+        };
+
+        function startExperience() {
+            const landing = document.getElementById('landingView');
+            const mainContent = document.getElementById('mainContent');
+            const sidebar = document.getElementById('appSidebar');
+            
+            landing.style.opacity = '0';
+            landing.style.transform = 'translateY(-10px)';
+            landing.style.transition = 'all 0.5s ease';
+
+            setTimeout(() => {
+                landing.classList.remove('active');
+                landing.style.display = 'none';
+                
+                sidebar.style.display = 'flex';
+                sidebar.style.opacity = '1';
+                mainContent.classList.add('sidebar-active');
+                
+                // Reset nav highlights
+                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+                document.getElementById('haikuNavItem').classList.add('active');
+
+                renderPoetry('haiku');
+                const poetryView = document.getElementById('poetryView');
+                poetryView.style.display = 'block';
+                void poetryView.offsetWidth;
+                poetryView.classList.add('active');
+            }, 500);
+        }
+
+        function returnHome() {
+            const poetryView = document.getElementById('poetryView');
+            const mainContent = document.getElementById('mainContent');
+            const sidebar = document.getElementById('appSidebar');
+            const landing = document.getElementById('landingView');
+
+            poetryView.classList.remove('active');
+            
+            setTimeout(() => {
+                poetryView.style.display = 'none';
+                sidebar.style.display = 'none';
+                mainContent.classList.remove('sidebar-active');
+                
+                landing.style.display = 'flex';
+                landing.style.opacity = '0';
+                landing.style.transform = 'translateY(15px)';
+                
+                // Force layout reflow
+                void landing.offsetWidth;
+                
+                landing.classList.add('active');
+                landing.style.opacity = '1';
+                landing.style.transform = 'translateY(0)';
+            }, 400);
+        }
+
+        function renderPoetry(category) {
+            const feed = document.getElementById('poetryFeed');
+            feed.innerHTML = '';
+            
+            poetryData[category].forEach(poem => {
+                const card = document.createElement('div');
+                card.className = 'poetry-card';
+                card.innerHTML = `
+                    <span class="type-badge">${category}</span>
+                    <h3>${poem.title}</h3>
+                    <div class="divider"></div>
+                    <p class="poem-text">${poem.text}</p>
+                `;
+                feed.appendChild(card);
+            });
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function switchPoem(key, btn) {
+            document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
+            btn.classList.add('active');
+
+            const feed = document.getElementById('poetryFeed');
+            feed.style.opacity = '0';
+            feed.style.transform = 'translateY(10px)';
+            feed.style.transition = 'all 0.4s ease';
+            
+            setTimeout(() => {
+                renderPoetry(key);
+                feed.style.opacity = '1';
+                feed.style.transform = 'translateY(0)';
+            }, 300);
+        }
+    </script>
+</body>
+</html>
